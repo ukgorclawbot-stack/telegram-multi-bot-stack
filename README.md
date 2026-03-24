@@ -9,6 +9,10 @@
 - 一键生成 env 和 launchd
 - 可扩容到任意数量 bot
 
+语言：
+- 中文：[README.md](./README.md)
+- English: [README.en.md](./README.en.md)
+
 适合这些场景：
 - 团队协作群里的任务拆分和汇报
 - 私聊里的高权限开发与执行
