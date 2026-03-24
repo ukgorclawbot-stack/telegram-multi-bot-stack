@@ -1,6 +1,7 @@
 # Telegram Multi-Bot Stack
 
 [![CI](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ukgorclawbot-stack/telegram-multi-bot-stack?display_name=tag)](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/releases)
 
 一个面向 Telegram 的多 bot 协作框架，支持：
 
@@ -21,6 +22,39 @@
 - 团队协作群里的任务拆分和汇报
 - 私聊里的高权限开发与执行
 - 多 bot 同时在线但职责明确分离
+
+## 架构图
+
+```mermaid
+flowchart LR
+  subgraph G["群聊 Bots"]
+    OG["OpenClaw-Group<br/>分派 / 拆分 / 状态 / 共享记忆"]
+    GG["Gemini-Group<br/>晨报 / 分析 / 汇报"]
+    CG["Codex-Group<br/>开发 / 脚本 / 排障"]
+  end
+
+  subgraph P["私聊 Bots"]
+    OP["OpenClaw-Private<br/>主控 / 私聊派单"]
+    GP["Gemini-Private<br/>高权限自主执行"]
+    CP["Codex-Private<br/>私聊开发执行"]
+  end
+
+  subgraph S["共享层"]
+    Q["Task Queue"]
+    M["Memory Summaries"]
+    K["Shared Skills"]
+  end
+
+  OG --> Q
+  GG --> Q
+  CG --> Q
+  OP --> Q
+  GP --> Q
+  CP --> Q
+
+  Q --> M
+  Q --> K
+```
 
 ## 快速开始
 

@@ -1,6 +1,7 @@
 # Telegram Multi-Bot Stack
 
 [![CI](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/ukgorclawbot-stack/telegram-multi-bot-stack?display_name=tag)](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/releases)
 
 A Telegram multi-bot framework with:
 
@@ -16,6 +17,39 @@ This project is suitable for:
 - task routing and reporting in team Telegram groups
 - high-permission execution in private chat
 - running multiple bots at once with clearly separated responsibilities
+
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph G["Group Bots"]
+    OG["OpenClaw-Group<br/>routing / decomposition / status / shared memory"]
+    GG["Gemini-Group<br/>daily reports / analysis / reporting"]
+    CG["Codex-Group<br/>coding / scripts / debugging"]
+  end
+
+  subgraph P["Private Bots"]
+    OP["OpenClaw-Private<br/>personal control / private delegation"]
+    GP["Gemini-Private<br/>high-permission autonomous execution"]
+    CP["Codex-Private<br/>private coding execution"]
+  end
+
+  subgraph S["Shared Layer"]
+    Q["Task Queue"]
+    M["Memory Summaries"]
+    K["Shared Skills"]
+  end
+
+  OG --> Q
+  GG --> Q
+  CG --> Q
+  OP --> Q
+  GP --> Q
+  CP --> Q
+
+  Q --> M
+  Q --> K
+```
 
 Language:
 
