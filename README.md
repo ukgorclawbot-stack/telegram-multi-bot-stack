@@ -17,6 +17,8 @@
 - English: [README.en.md](./README.en.md)
 - 中文安装：[INSTALL.md](./INSTALL.md)
 - English install: [INSTALL.en.md](./INSTALL.en.md)
+- 贡献指南：[CONTRIBUTING.md](./CONTRIBUTING.md)
+- 安全说明：[SECURITY.md](./SECURITY.md)
 
 适合这些场景：
 - 团队协作群里的任务拆分和汇报

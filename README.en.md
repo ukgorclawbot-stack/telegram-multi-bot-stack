@@ -57,6 +57,8 @@ Language:
 - English: [README.en.md](./README.en.md)
 - Chinese install: [INSTALL.md](./INSTALL.md)
 - English install: [INSTALL.en.md](./INSTALL.en.md)
+- Contributing: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Security: [SECURITY.md](./SECURITY.md)
 
 ## Quick Start
 
