@@ -1,0 +1,165 @@
+# 推荐的 6 bot 配置示例。
+# 首次安装后，也可以直接运行：
+#   bash ./configure.sh
+# 让向导自动生成正式的 bot_stack.bootstrap.toml
+
+[stack]
+repo_dir = "/Users/your_user/telegram-bot-stack-open"
+output_dir = "/Users/your_user/telegram-bot-stack-open/generated/bot-stack"
+launch_agents_dir = "/Users/your_user/Library/LaunchAgents"
+namespace = "com.example.telegrambots"
+runner_script = "/Users/your_user/telegram-bot-stack-open/run_role_bot.sh"
+bot_entrypoint = "group_bot.py"
+allowed_user_ids = "123456789"
+
+[defaults]
+group_task_db_path = "/Users/your_user/telegram-bot-stack-open/group-tasks.sqlite3"
+memory_db_path = "/Users/your_user/telegram-bot-stack-open/bot-memory.sqlite3"
+shared_memory_dir = "/Users/your_user/telegram-bot-stack-open/shared-memory"
+memory_timezone = "Asia/Shanghai"
+runner_timeout_secs = 900
+persisted_history_limit = 24
+max_context_messages = 8
+enable_shared_memory_log = true
+poll_interval_secs = 5
+task_command = "task"
+long_term_memory_script_path = "/Users/your_user/telegram-bot-stack-open/scripts/shared-memory-write.sh"
+workspace_dir = "/Users/your_user/.openclaw/workspace"
+home_dir = "/Users/your_user"
+
+[[bots]]
+id = "group-openclaw"
+scene = "group"
+role = "openclaw"
+mode = "dispatcher"
+display_name = "OpenClaw Group"
+token_env = "TG_OPENCLAW_GROUP_TOKEN"
+workdir = "/Users/your_user/.openclaw/workspace"
+allow_group_chat = true
+allow_dm_tasks = false
+enable_direct_private_tasks = false
+private_task_mode = "manual"
+allow_long_term_memory_write = true
+persisted_history_limit = 80
+max_context_messages = 16
+service_label = "com.example.telegram-group-openclaw"
+
+[bots.extra_env]
+RUNNER_BACKEND = "openclaw_router"
+OPENCLAW_BIN = "/opt/homebrew/bin/openclaw"
+OPENCLAW_ROUTER_CODING_AGENT = "codex"
+OPENCLAW_ROUTER_DOCS_AGENT = "gemini"
+OPENCLAW_ROUTER_DEFAULT_AGENT = "codex"
+
+[[bots]]
+id = "group-gemini"
+scene = "group"
+role = "gemini"
+mode = "worker"
+display_name = "Gemini Group"
+token_env = "TG_GEMINI_GROUP_TOKEN"
+workdir = "/Users/your_user/.openclaw/workspace"
+allow_group_chat = true
+allow_dm_tasks = false
+enable_direct_private_tasks = false
+private_task_mode = "direct"
+allow_long_term_memory_write = false
+service_label = "com.example.telegram-group-gemini"
+
+[bots.extra_env]
+RUNNER_BACKEND = "gemini_cli"
+GEMINI_BIN = "/opt/homebrew/bin/gemini"
+GEMINI_APPROVAL_MODE = "auto_edit"
+
+[[bots]]
+id = "group-codex"
+scene = "group"
+role = "codex"
+mode = "worker"
+display_name = "Codex Group"
+token_env = "TG_CODEX_GROUP_TOKEN"
+workdir = "/Users/your_user"
+allow_group_chat = true
+allow_dm_tasks = false
+enable_direct_private_tasks = false
+private_task_mode = "direct"
+allow_long_term_memory_write = false
+service_label = "com.example.telegram-group-codex"
+
+[bots.extra_env]
+RUNNER_BACKEND = "codex_cli"
+CODEX_BIN = "/opt/homebrew/bin/codex"
+CODEX_SANDBOX_MODE = "workspace-write"
+
+[[bots]]
+id = "private-openclaw"
+scene = "private"
+role = "openclaw"
+mode = "dispatcher"
+display_name = "OpenClaw Private"
+token_env = "TG_OPENCLAW_PRIVATE_TOKEN"
+workdir = "/Users/your_user"
+private_direct_workdir = "/Users/your_user"
+allow_group_chat = false
+allow_dm_tasks = true
+enable_direct_private_tasks = true
+private_task_mode = "manual"
+allow_long_term_memory_write = true
+persisted_history_limit = 80
+max_context_messages = 16
+service_label = "com.example.telegram-private-openclaw"
+
+[bots.extra_env]
+RUNNER_BACKEND = "openclaw_router"
+PRIVATE_DIRECT_RUNNER_BACKEND = "openclaw_agent"
+PRIVATE_DIRECT_OPENCLAW_AGENT_ID = "main"
+OPENCLAW_BIN = "/opt/homebrew/bin/openclaw"
+OPENCLAW_ROUTER_CODING_AGENT = "codex"
+OPENCLAW_ROUTER_DOCS_AGENT = "gemini"
+OPENCLAW_ROUTER_DEFAULT_AGENT = "codex"
+
+[[bots]]
+id = "private-gemini"
+scene = "private"
+role = "gemini"
+mode = "worker"
+display_name = "Gemini Private"
+token_env = "TG_GEMINI_PRIVATE_TOKEN"
+workdir = "/Users/your_user"
+private_direct_workdir = "/Users/your_user"
+allow_group_chat = false
+allow_dm_tasks = true
+enable_direct_private_tasks = true
+private_task_mode = "direct"
+allow_long_term_memory_write = false
+persisted_history_limit = 48
+max_context_messages = 12
+service_label = "com.example.telegram-private-gemini"
+
+[bots.extra_env]
+RUNNER_BACKEND = "gemini_cli"
+GEMINI_BIN = "/opt/homebrew/bin/gemini"
+GEMINI_APPROVAL_MODE = "auto_edit"
+
+[[bots]]
+id = "private-codex"
+scene = "private"
+role = "codex"
+mode = "worker"
+display_name = "Codex Private"
+token_env = "TG_CODEX_PRIVATE_TOKEN"
+workdir = "/Users/your_user"
+private_direct_workdir = "/Users/your_user"
+allow_group_chat = false
+allow_dm_tasks = true
+enable_direct_private_tasks = true
+private_task_mode = "direct"
+allow_long_term_memory_write = false
+persisted_history_limit = 48
+max_context_messages = 12
+service_label = "com.example.telegram-private-codex"
+
+[bots.extra_env]
+RUNNER_BACKEND = "codex_cli"
+CODEX_BIN = "/opt/homebrew/bin/codex"
+CODEX_SANDBOX_MODE = "workspace-write"
