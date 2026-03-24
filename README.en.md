@@ -59,6 +59,8 @@ Language:
 - English install: [INSTALL.en.md](./INSTALL.en.md)
 - Contributing: [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Security: [SECURITY.md](./SECURITY.md)
+- Code of Conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- FAQ: [docs/faq.md](./docs/faq.md)
 
 ## Quick Start
 
