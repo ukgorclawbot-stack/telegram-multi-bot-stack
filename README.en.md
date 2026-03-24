@@ -1,5 +1,7 @@
 # Telegram Multi-Bot Stack
 
+[![CI](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml)
+
 A Telegram multi-bot framework with:
 
 - separated group bots and private bots
@@ -19,6 +21,8 @@ Language:
 
 - Chinese: [README.md](./README.md)
 - English: [README.en.md](./README.en.md)
+- Chinese install: [INSTALL.md](./INSTALL.md)
+- English install: [INSTALL.en.md](./INSTALL.en.md)
 
 ## Quick Start
 
@@ -33,6 +37,7 @@ bash ./apply_stack.sh
 If you want a beginner-friendly walkthrough, read:
 
 - [INSTALL.md](./INSTALL.md)
+- [INSTALL.en.md](./INSTALL.en.md)
 
 If you only want to preview generated files without starting services:
 

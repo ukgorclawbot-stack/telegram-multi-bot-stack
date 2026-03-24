@@ -1,5 +1,7 @@
 # Telegram Multi-Bot Stack
 
+[![CI](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml/badge.svg)](https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack/actions/workflows/ci.yml)
+
 一个面向 Telegram 的多 bot 协作框架，支持：
 
 - 群聊 bot 和私聊 bot 分离
@@ -12,6 +14,8 @@
 语言：
 - 中文：[README.md](./README.md)
 - English: [README.en.md](./README.en.md)
+- 中文安装：[INSTALL.md](./INSTALL.md)
+- English install: [INSTALL.en.md](./INSTALL.en.md)
 
 适合这些场景：
 - 团队协作群里的任务拆分和汇报
@@ -30,6 +34,7 @@ bash ./apply_stack.sh
 
 更适合零基础的详细说明见：
 - [INSTALL.md](./INSTALL.md)
+- [INSTALL.en.md](./INSTALL.en.md)
 
 如果你只想先看会生成什么，不真正启动服务：
 
