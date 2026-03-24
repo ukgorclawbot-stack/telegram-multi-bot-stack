@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  syntax-and-generate:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python syntax check
+        run: |
+          python3 -m py_compile \
+            bootstrap_bot_stack.py \
+            configure_stack.py \
+            reverse_export_bot_stack.py \
+            make_migration_ready_stack.py \
+            bot.py \
+            group_bot.py \
+            xhs_adapter.py \
+            memory_store.py \
+            routing.py \
+            runners.py \
+            task_registry.py
+
+      - name: Shell syntax check
+        run: |
+          bash -n install.sh
+          bash -n configure.sh
+          bash -n apply_stack.sh
+          bash -n health_check.sh
+          bash -n scripts/shared-memory-write.sh
+          zsh -n bootstrap_bot_stack.sh
+          zsh -n run_role_bot.sh
+          zsh -n run_group_bot.sh
+
+      - name: Generate local config for CI
+        run: |
+          printf '%s\n%s\n%s\n%s\n%s\n' \
+            "$HOME" \
+            "123456789" \
+            "com.example.telegrambots" \
+            "Y" \
+            "N" \
+            | python3 configure_stack.py
+
+      - name: Generate stack from CI config
+        run: |
+          python3 bootstrap_bot_stack.py --config bot_stack.bootstrap.toml
+
+      - name: Build migration-ready template
+        run: |
+          python3 reverse_export_bot_stack.py \
+            --source-repo "$PWD" \
+            --launch-agents-dir "$PWD/.ci-launchagents" \
+            --output "$PWD/bot_stack.reverse_exported.toml"
+          python3 make_migration_ready_stack.py \
+            --source "$PWD/bot_stack.reverse_exported.toml" \
+            --output "$PWD/bot_stack.migration_ready.toml" \
+            --target-home "/Users/your_user"
