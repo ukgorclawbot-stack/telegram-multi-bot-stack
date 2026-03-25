@@ -14,17 +14,21 @@ bash "$REPO_DIR/install_ai_runtimes.sh" --check || true
 
 echo
 echo "==> 准备配置 AI 认证环境"
-echo "请在打开的文件里按需填写以下内容："
+echo "这一步同时支持两种方式："
+echo "1) API key"
+echo "2) auth / login"
+echo
+echo "如果你想用 API key，就在打开的文件里按需填写："
 echo "- OPENAI_API_KEY"
 echo "- ANTHROPIC_API_KEY"
 echo "- GEMINI_API_KEY"
 echo "- GOOGLE_API_KEY"
 echo
-echo "如果你更喜欢交互式登录，也可以稍后手动执行："
-echo "- openclaw"
+echo "如果你想用 auth / login，也可以把这个文件留空，然后手动执行："
+echo "- openclaw configure  或  openclaw onboard"
 echo "- gemini"
-echo "- codex"
-echo "- claude"
+echo "- codex login"
+echo "- claude auth login"
 echo
 
 if command -v open >/dev/null 2>&1; then

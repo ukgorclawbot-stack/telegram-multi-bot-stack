@@ -68,8 +68,10 @@ bash ./configure_ai_runtimes.sh
 
 - 检查 4 个 AI CLI 是否已经安装
 - 自动创建 `.ai_runtimes.env`
-- 引导你填写 API key
-- 告诉你如果更喜欢交互式登录，应该执行哪些 CLI
+- 引导你选择：
+  - 填 API key
+  - 或者直接做 auth/login
+- 告诉你不同 CLI 对应的登录命令
 
 如果你完全是第一次装，建议在配置 bot stack 之前先完成这一步。
 

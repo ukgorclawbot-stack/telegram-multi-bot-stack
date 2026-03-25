@@ -200,12 +200,12 @@ print_runtime_status() {
   fi
 }
 
-print_env_status() {
+print_env_status_optional() {
   local key="$1"
   if [ -n "${!key:-}" ]; then
     printf "[%s] %-18s configured\n" "$(status_icon ok)" "$key"
   else
-    printf "[%s] %-18s empty\n" "$(status_icon warn)" "$key"
+    printf "[%s] %-18s optional-empty\n" "$(status_icon info)" "$key"
   fi
 }
 
@@ -224,13 +224,16 @@ print_runtime_status "openclaw" "OpenClaw"
 print_runtime_status "gemini" "Gemini CLI"
 print_runtime_status "codex" "Codex CLI"
 print_runtime_status "claude" "Claude Code"
-print_env_status "OPENAI_API_KEY"
-print_env_status "ANTHROPIC_API_KEY"
+print_env_status_optional "OPENAI_API_KEY"
+print_env_status_optional "ANTHROPIC_API_KEY"
 if [ -n "${GEMINI_API_KEY:-}" ] || [ -n "${GOOGLE_API_KEY:-}" ]; then
   printf "[%s] %-18s configured\n" "$(status_icon ok)" "Gemini auth"
 else
-  printf "[%s] %-18s empty\n" "$(status_icon warn)" "Gemini auth"
+  printf "[%s] %-18s optional-empty\n" "$(status_icon info)" "Gemini auth"
 fi
+printf "[%s] %-18s supported via login or local config\n" "$(status_icon info)" "OpenClaw auth"
+printf "[%s] %-18s supported via codex login\n" "$(status_icon info)" "Codex auth"
+printf "[%s] %-18s supported via claude auth login\n" "$(status_icon info)" "Claude auth"
 
 echo
 echo "== Bot Services =="

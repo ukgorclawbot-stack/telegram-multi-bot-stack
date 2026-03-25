@@ -2,6 +2,12 @@
 
 All notable changes to this public repository are documented here.
 
+## v0.1.9
+
+- clarified that `Codex`, `Claude Code`, `Gemini CLI`, and `OpenClaw` do not require API-key-only setup
+- updated runtime setup flow to support both `auth/login` and API key paths
+- changed health checks so empty API key values are treated as optional when auth/login may still be valid
+
 ## v0.1.8
 
 - added one-command AI runtime installation for `OpenClaw`, `Gemini CLI`, `Codex CLI`, and `Claude Code`

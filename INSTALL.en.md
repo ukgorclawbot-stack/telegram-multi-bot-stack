@@ -63,8 +63,10 @@ This step will:
 
 - check whether the 4 AI CLIs are installed
 - create `.ai_runtimes.env`
-- guide you to fill in API keys
-- tell you which CLIs to run if you prefer interactive login
+- guide you to choose between:
+  - API keys
+  - auth/login
+- tell you which CLI login commands to run if you prefer auth
 
 If this is your first time setting everything up, do this before bot stack configuration.
 

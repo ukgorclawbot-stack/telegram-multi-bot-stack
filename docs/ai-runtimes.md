@@ -56,7 +56,16 @@ This script helps users prepare authentication.
 
 It does not print secrets.
 
-It opens `.ai_runtimes.env` and lets users fill:
+It opens `.ai_runtimes.env` if users want API-key based auth.
+
+Users can also leave that file empty and use interactive login instead.
+
+It supports:
+
+- API key mode
+- auth/login mode
+
+When using API keys, users can fill:
 
 - `OPENAI_API_KEY`
 - `ANTHROPIC_API_KEY`
@@ -66,7 +75,7 @@ It opens `.ai_runtimes.env` and lets users fill:
 这个脚本的作用不是“替你登录账号”，而是：
 
 - 统一生成认证配置文件
-- 让新手知道该填哪些 key
+- 让新手知道 API key 只是可选方案之一
 - 给出交互式登录的备用入口
 
 ## 5. Two supported auth styles / 两种支持的认证方式
@@ -99,6 +108,20 @@ Best for:
 - 个人电脑
 - 第一次快速上手
 
+Typical examples:
+
+- `openclaw configure` or `openclaw onboard`
+- `gemini`
+- `codex login`
+- `claude auth login`
+
+常见命令示例：
+
+- `openclaw configure` 或 `openclaw onboard`
+- `gemini`
+- `codex login`
+- `claude auth login`
+
 ## 6. Important runtime note / 一个重要细节
 
 This project makes the bot launch script load `.ai_runtimes.env` automatically.
@@ -125,16 +148,24 @@ It now reports whether these four AI CLIs are available.
 - Codex CLI 是否安装
 - Claude Code 是否安装
 
+It does not treat an empty API key file as a hard failure, because auth/login may still be valid.
+
+它不会把“API key 为空”直接判成失败，因为用户也可能走 auth/login。
+
 ## 8. Recommended rule for beginners / 给小白的推荐规则
 
 If you are a beginner:
 
 1. let `install.sh` install the tools
-2. fill `.ai_runtimes.env`
+2. choose either:
+   - fill `.ai_runtimes.env`
+   - or complete auth/login interactively
 3. only then continue to bot token configuration
 
 如果你是第一次装：
 
 1. 先让 `install.sh` 装 4 个 AI CLI
-2. 再填 `.ai_runtimes.env`
+2. 再二选一：
+   - 填 `.ai_runtimes.env`
+   - 或者完成 auth/login
 3. 最后再去填 bot token 和启动服务
