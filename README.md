@@ -21,6 +21,7 @@
 - 安全说明：[SECURITY.md](./SECURITY.md)
 - 行为准则：[CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - 常见问题：[docs/faq.md](./docs/faq.md)
+- 更新记录：[CHANGELOG.md](./CHANGELOG.md)
 
 适合这些场景：
 - 团队协作群里的任务拆分和汇报

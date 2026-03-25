@@ -61,6 +61,7 @@ Language:
 - Security: [SECURITY.md](./SECURITY.md)
 - Code of Conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - FAQ: [docs/faq.md](./docs/faq.md)
+- Changelog: [CHANGELOG.md](./CHANGELOG.md)
 
 ## Quick Start
 
