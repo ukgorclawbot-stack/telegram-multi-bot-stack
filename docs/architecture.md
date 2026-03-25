@@ -2,180 +2,337 @@
 
 This document explains how the public Telegram Multi-Bot Stack is structured.
 
-这份文档解释公开版 Telegram Multi-Bot Stack 的整体架构。
+这份文档解释公开版 Telegram Multi-Bot Stack 的整体架构，以及它为什么要把群聊 bot 和私聊 bot 分开。
 
-## 1. High-Level Idea / 总体思路
+## 1. Design Goal / 设计目标
 
-The stack separates:
+The stack is built for one practical goal:
 
-- group bots for collaboration, routing, and reporting
-- private bots for deeper execution and personal workflows
-- shared layers for task queue, memory summaries, and reusable skills
+- keep group collaboration stable
+- keep private execution powerful
+- let multiple bots share memory and skills without turning into one giant mixed process
 
-这套系统把能力拆成三层：
+这套系统追求的不是“一个 bot 什么都干”，而是：
 
-- 群聊 bots：负责协作、分派、汇报
-- 私聊 bots：负责深度执行和个人工作流
-- 共享层：负责任务队列、记忆摘要和复用 skill
+- 群聊协作稳定
+- 私聊执行强大
+- 多 bot 共享记忆和技能
+- 同时避免所有能力混在一个进程里互相污染
 
-## 2. Default 6-Bot Layout / 默认 6 Bot 结构
+## 2. High-Level Model / 总体模型
 
-| Bot | Scene | Main responsibility |
+The architecture is split into three layers:
+
+- chat-facing bots
+- shared runtime services
+- reusable configuration and deployment tooling
+
+架构分成三层：
+
+- 面向聊天的 bot 层
+- 共享运行时层
+- 可复用的配置与部署工具层
+
+```mermaid
+flowchart TD
+    U["User"] --> G["Group Bots"]
+    U --> P["Private Bots"]
+
+    G --> T["Task Queue"]
+    P --> T
+
+    G --> M["Memory Layer"]
+    P --> M
+
+    G --> S["Shared Skills"]
+    P --> S
+
+    T --> W["Workers and Handoffs"]
+    W --> M
+
+    C["Bootstrap and launchd config"] --> G
+    C --> P
+```
+
+## 3. Default 6-Bot Topology / 默认 6 Bot 拓扑
+
+The public stack uses a default 6-bot layout because it is simple enough for first-time users, while still separating responsibilities cleanly.
+
+公开版默认使用 6 个 bot，因为这已经足够把群聊和私聊彻底拆开，同时又不会让新手一上来就面对太多角色。
+
+| Bot | Scene | Main responsibility | Typical work style |
+|---|---|---|---|
+| `OpenClaw-Group` | Group | routing, decomposition, status, shared memory write-back | coordinator |
+| `Gemini-Group` | Group | daily report, research summary, analysis, reporting | analyst |
+| `Codex-Group` | Group | coding, scripts, debugging, technical execution | builder |
+| `OpenClaw-Private` | Private | personal control plane, explicit delegation, long-term memory entry | personal coordinator |
+| `Gemini-Private` | Private | high-permission autonomous execution, research-to-action | deep executor |
+| `Codex-Private` | Private | private coding execution, direct repository work | private engineer |
+
+## 4. Why Split Group and Private Bots / 为什么要拆群聊和私聊
+
+Mixing group chat and private chat into a single bot usually creates five problems:
+
+- prompts drift between collaboration mode and private assistant mode
+- one long private task can slow down group replies
+- permission boundaries become harder to reason about
+- fallback logic becomes messy
+- memory gets polluted across scenes
+
+把群聊和私聊混在一起，最容易出的问题就是：
+
+- 提示词口径混乱
+- 私聊长任务拖慢群聊
+- 权限边界不清晰
+- fallback 逻辑越来越难维护
+- 记忆互相串线
+
+This stack solves that by separating:
+
+- token
+- process
+- launchd service
+- env file
+- default workdir
+
+这套架构的核心思想就是：
+
+- 群聊和私聊用不同 token
+- 跑不同进程
+- 用不同 launchd 服务
+- 读不同 env
+- 可以有不同默认工作目录
+
+## 5. Routing Model / 路由模型
+
+### 5.1 Group Chat
+
+Typical group flow:
+
+1. `OpenClaw-Group` receives an unassigned task-like message
+2. it decomposes the request
+3. it routes work to `Gemini-Group` or `Codex-Group`
+4. the final outcome is written back into shared memory
+
+群聊里的典型路径：
+
+1. `OpenClaw-Group` 接住未点名任务
+2. 先做拆分和判断
+3. 再把任务分给 `Gemini-Group` 或 `Codex-Group`
+4. 最终结果回写共享记忆
+
+Typical non-task paths:
+
+- digest-like queries can go directly to `Gemini-Group`
+- casual messages can remain lightweight and not enter the task queue
+
+非任务型消息通常是：
+
+- 晨报/摘要类，直接给 `Gemini-Group`
+- 闲聊类，不必进入任务队列
+
+### 5.2 Private Chat
+
+Typical private flow:
+
+- private bots accept direct requests
+- execution can be deeper and less constrained
+- results can still be summarized into shared memory when needed
+
+私聊里的典型路径：
+
+- 私聊 bot 直接处理深度请求
+- 执行能力更强、权限更大
+- 但最后仍然可以把关键结论摘要写回共享记忆
+
+## 6. Memory Model / 记忆模型
+
+This stack is intentionally not built on raw chat history alone.
+
+它不是靠原始聊天记录硬堆上下文，而是使用分层记忆。
+
+### 6.1 Memory Layers
+
+| Layer | Purpose | Sharing rule |
 |---|---|---|
-| `OpenClaw-Group` | Group | routing, task decomposition, status, shared memory write-back |
-| `Gemini-Group` | Group | daily report, research summary, analysis, reporting |
-| `Codex-Group` | Group | coding, scripts, debugging, technical execution |
-| `OpenClaw-Private` | Private | personal control plane, private delegation |
-| `Gemini-Private` | Private | high-permission autonomous execution |
-| `Codex-Private` | Private | private coding execution |
+| Raw private memory | keep private dialog continuity | private only |
+| Raw group memory | keep group context per bot | group only |
+| Shared group memory | keep final outcomes and task history | shared across group bots |
+| Instant memory summaries | keep recent short summaries for retrieval | shared as summaries |
+| Daily memory | keep what happened today | shared |
+| Long-term memory | store preferences, rules, stable decisions | usually controlled centrally |
 
-## 3. Shared Layers / 共享层
+### 6.2 Why Summaries Matter
 
-### 3.1 Task Queue
+Memory summaries make the system easier to scale because they:
 
-Used for:
+- improve retrieval speed
+- reduce prompt bloat
+- make cross-bot recall practical
+- lower the risk of copying private raw dialog into group contexts
 
-- delegated execution
-- worker pickup
-- final result handoff
+记忆摘要的好处很直接：
 
-用途：
+- 更容易索引
+- 更容易跨 bot 共享
+- 不需要把整段原始对话都塞进 prompt
+- 群聊和私聊更不容易互相污染
 
-- 跨 bot 任务委派
-- worker 认领执行
-- 最终结果回传
+## 7. Shared Skills / 共享 Skill 层
 
-### 3.2 Memory Summaries
+Skills are treated as reusable capabilities, not bot-specific hacks.
 
-The stack does not rely only on raw chat history.
-
-Instead, it keeps short summaries so bots can:
-
-- recall recent context faster
-- share important outcomes without copying full conversations
-- reduce group/private cross-contamination
-
-这套系统不是只靠原始聊天历史。
-
-它会保留简短摘要，帮助 bot：
-
-- 更快召回最近上下文
-- 共享关键结论而不是整段聊天
-- 降低群聊和私聊上下文串线
-
-### 3.3 Shared Skills
-
-Skills are designed to be shared across bots.
+skill 在这套架构里不是“某个 bot 的私有功能”，而是统一共享的能力层。
 
 That means:
 
-- new skills can be installed once
-- multiple bots can reuse the same capability
-- the stack stays extensible without hardcoding everything into bot logic
+- install once, reuse many times
+- keep logic out of giant prompt files when possible
+- support future bots without rewriting existing workflows
 
-skill 设计成可共享：
+也就是说：
 
-- 新 skill 装一次即可
-- 多个 bot 可以复用
-- 扩展能力不需要都写死进 bot 逻辑
+- 装一次，多 bot 共用
+- 尽量把复杂能力沉淀成 skill，而不是塞进大 prompt
+- 以后就算新增 bot，也能直接复用原能力
 
-## 4. Message Routing / 消息路由
+## 8. Permission and Workdir Model / 权限与工作目录模型
 
-### Group Chat
+The stack does not assume every bot should start from the same directory.
 
-Typical pattern:
+这套系统不要求所有 bot 都用同一个工作目录。
 
-1. `OpenClaw-Group` receives an unassigned task-like message
-2. it decomposes the task
-3. it routes to `Gemini-Group` or `Codex-Group`
-4. final result is written back into shared memory
+### 8.1 Common Pattern
 
-群聊典型链路：
+- group bots often use a narrower workspace-oriented workdir
+- private bots often use a broader home-directory workdir
 
-1. `OpenClaw-Group` 接住未点名的任务型消息
-2. 它先拆分任务
-3. 再分派给 `Gemini-Group` 或 `Codex-Group`
-4. 最终结果写回共享记忆
+常见默认模式是：
 
-### Private Chat
+- 群聊 bot 更偏 workspace
+- 私聊 bot 更偏 home 目录
 
-Typical pattern:
+### 8.2 Why This Matters
 
-- private bots handle deeper direct requests
-- private execution can use broader local permissions
-- group-facing behavior stays more stable and lower-risk
+Different workdirs change:
 
-私聊典型链路：
+- how relative paths resolve
+- which repositories are discovered first
+- how broad searches become
+- how much accidental blast radius a bot has
 
-- 私聊 bot 直接接住深度请求
-- 私聊执行可以拥有更高的本机权限
-- 群聊侧保持更稳、更低风险
+工作目录不同，实际会影响：
 
-## 5. Permission Model / 权限模型
+- 相对路径解析
+- 默认先命中哪个仓库
+- 搜索范围大小
+- 误操作风险范围
 
-The default stack usually uses:
+In short:
 
-- more constrained workdirs for some group bots
-- broader home-directory workdirs for private bots
+- narrower workdir = safer and more predictable
+- broader workdir = more flexible and more powerful
 
-默认情况下通常是：
+简单理解就是：
 
-- 群聊部分 bot 使用更收敛的工作目录
-- 私聊 bot 使用更宽的 home 目录工作范围
+- 收敛目录更稳
+- 更大目录更自由
 
-Why:
+## 9. Runtime Components / 运行时组件
 
-- group bots should be safer and more predictable
-- private bots are expected to do deeper personal work
+The stack usually relies on these runtime pieces:
 
-原因：
+- Telegram bot processes
+- launchd services
+- task registry
+- memory store
+- shared skill directories
+- optional health-check scripts
 
-- 群聊 bot 更强调安全和稳定
-- 私聊 bot 更强调深度执行能力
+运行时通常由这些部分组成：
 
-## 6. Config Model / 配置模型
+- Telegram bot 进程
+- launchd 服务
+- 任务注册表
+- 记忆存储层
+- 共享 skill 目录
+- 健康检查脚本
 
-The stack is generated from a TOML spec.
+## 10. Config Generation Model / 配置生成模型
+
+The public project is designed to be generated from a single declarative spec.
+
+公开版项目的重点之一，是尽量从一份声明式配置生成整套运行文件。
 
 Important pieces:
 
 - `bot_stack.bootstrap.toml`
 - generated env files
 - generated launchd plist files
+- generated stack summary files
 
-这套系统通过 TOML 清单生成配置。
-
-关键文件：
+关键文件通常包括：
 
 - `bot_stack.bootstrap.toml`
-- 生成出来的 env 文件
-- 生成出来的 launchd plist 文件
+- 生成出来的 env
+- 生成出来的 launchd plist
+- 生成出来的 stack summary
 
-## 7. Migration and Rebuild / 迁移与重建
+This lets the project support:
 
-The project supports:
+- one-click generation
+- predictable rebuilds
+- easier reviews
+- safer migration between machines
 
-- reverse export from a live stack
-- migration-ready templates for a fresh machine
+这样就能支持：
 
-支持：
+- 一键生成
+- 稳定重建
+- 更容易审查配置差异
+- 更容易迁移到新机器
 
-- 从线上运行中的配置反向导出
-- 为新机器生成可落地的迁移模板
+## 11. Migration and Reverse Export / 迁移与反向导出
 
-This makes it easier to:
+The stack supports two complementary directions:
 
-- move to another Mac
-- clone the setup safely
-- document a running deployment
+- export a running live stack into a clean declarative summary
+- turn that summary into a migration-ready template for another machine
 
-这样更方便：
+这套工具支持两个方向：
 
-- 迁移到另一台 Mac
-- 安全复制一套环境
-- 文档化当前运行架构
+- 从线上运行中的配置反向导出结构清单
+- 再把清单加工成新机器可落地的迁移模板
 
-## 8. Recommended Reading Order / 建议阅读顺序
+This is useful because it gives you:
+
+- a single source of truth for a live deployment
+- a safer migration path
+- easier backups for Git
+
+它的价值在于：
+
+- 把当前线上状态收敛成单一真相源
+- 让迁移更可控
+- 让 Git 备份更清晰
+
+## 12. Operational Philosophy / 运维思路
+
+This project prefers:
+
+- multiple smaller, isolated services
+- shared summaries instead of mixed raw history
+- reusable skills instead of giant monolithic prompts
+- generated config instead of hand-maintained sprawl
+
+这套架构背后的运维思路是：
+
+- 多个小而隔离的服务
+- 共享摘要，而不是混合原始历史
+- 共享 skill，而不是巨型 prompt
+- 生成配置，而不是全靠手工维护
+
+## 13. Recommended Reading Order / 建议阅读顺序
 
 If you are new, read in this order:
 
