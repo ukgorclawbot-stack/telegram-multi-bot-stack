@@ -2,6 +2,20 @@
 
 All notable changes to this public repository are documented here.
 
+## v0.1.8
+
+- added one-command AI runtime installation for `OpenClaw`, `Gemini CLI`, `Codex CLI`, and `Claude Code`
+- added `install_ai_runtimes.sh`
+- added `configure_ai_runtimes.sh`
+- added `.ai_runtimes.env.example`
+- added `docs/ai-runtimes.md`
+- updated install and health check flows to include AI runtime setup
+
+## v0.1.7
+
+- expanded `docs/architecture.md`
+- added deeper architecture guidance for group/private bot separation, memory layers, workdirs, and migration concepts
+
 ## v0.1.6
 
 - added `CHANGELOG.md`

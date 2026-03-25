@@ -35,6 +35,8 @@ jobs:
       - name: Shell syntax check
         run: |
           bash -n install.sh
+          bash -n install_ai_runtimes.sh
+          bash -n configure_ai_runtimes.sh
           bash -n configure.sh
           bash -n apply_stack.sh
           bash -n health_check.sh

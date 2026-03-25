@@ -9,6 +9,7 @@ A Telegram multi-bot framework with:
 - multi-role collaboration across `OpenClaw / Gemini / Codex / Claude`
 - shared task queue
 - shared memory summaries
+- one-command installation for `OpenClaw / Gemini CLI / Codex / Claude Code`
 - one-command env and launchd generation
 - flexible bot count scaling
 
@@ -57,6 +58,7 @@ Language:
 - English: [README.en.md](./README.en.md)
 - Chinese install: [INSTALL.md](./INSTALL.md)
 - English install: [INSTALL.en.md](./INSTALL.en.md)
+- AI CLI setup: [docs/ai-runtimes.md](./docs/ai-runtimes.md)
 - Contributing: [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Security: [SECURITY.md](./SECURITY.md)
 - Code of Conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
@@ -70,6 +72,7 @@ Language:
 git clone https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack.git
 cd telegram-multi-bot-stack
 bash ./install.sh
+bash ./configure_ai_runtimes.sh
 bash ./configure.sh
 bash ./apply_stack.sh
 ```
@@ -78,6 +81,7 @@ If you want a beginner-friendly walkthrough, read:
 
 - [INSTALL.md](./INSTALL.md)
 - [INSTALL.en.md](./INSTALL.en.md)
+- [docs/ai-runtimes.md](./docs/ai-runtimes.md)
 
 If you only want to preview generated files without starting services:
 
@@ -85,6 +89,7 @@ If you only want to preview generated files without starting services:
 git clone https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack.git
 cd telegram-multi-bot-stack
 bash ./install.sh
+bash ./configure_ai_runtimes.sh
 bash ./configure.sh
 bash ./bootstrap_bot_stack.sh generate
 ```
@@ -103,6 +108,9 @@ bash ./bootstrap_bot_stack.sh generate
 ```bash
 # Install dependencies
 bash ./install.sh
+
+# Configure the 4 AI CLIs
+bash ./configure_ai_runtimes.sh
 
 # Run interactive configuration
 bash ./configure.sh

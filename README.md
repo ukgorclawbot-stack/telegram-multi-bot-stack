@@ -9,6 +9,7 @@
 - `OpenClaw / Gemini / Codex / Claude` 多角色协作
 - 共享任务队列
 - 共享记忆摘要
+- 一键安装 `OpenClaw / Gemini CLI / Codex / Claude Code`
 - 一键生成 env 和 launchd
 - 可扩容到任意数量 bot
 
@@ -17,6 +18,7 @@
 - English: [README.en.md](./README.en.md)
 - 中文安装：[INSTALL.md](./INSTALL.md)
 - English install: [INSTALL.en.md](./INSTALL.en.md)
+- AI CLI 安装配置：[docs/ai-runtimes.md](./docs/ai-runtimes.md)
 - 贡献指南：[CONTRIBUTING.md](./CONTRIBUTING.md)
 - 安全说明：[SECURITY.md](./SECURITY.md)
 - 行为准则：[CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
@@ -68,6 +70,7 @@ flowchart LR
 git clone https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack.git
 cd telegram-multi-bot-stack
 bash ./install.sh
+bash ./configure_ai_runtimes.sh
 bash ./configure.sh
 bash ./apply_stack.sh
 ```
@@ -75,6 +78,7 @@ bash ./apply_stack.sh
 更适合零基础的详细说明见：
 - [INSTALL.md](./INSTALL.md)
 - [INSTALL.en.md](./INSTALL.en.md)
+- [docs/ai-runtimes.md](./docs/ai-runtimes.md)
 
 如果你只想先看会生成什么，不真正启动服务：
 
@@ -82,6 +86,7 @@ bash ./apply_stack.sh
 git clone https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack.git
 cd telegram-multi-bot-stack
 bash ./install.sh
+bash ./configure_ai_runtimes.sh
 bash ./configure.sh
 bash ./bootstrap_bot_stack.sh generate
 ```
@@ -100,6 +105,9 @@ bash ./bootstrap_bot_stack.sh generate
 ```bash
 # 安装依赖
 bash ./install.sh
+
+# 配置 4 个 AI CLI
+bash ./configure_ai_runtimes.sh
 
 # 交互式生成配置
 bash ./configure.sh

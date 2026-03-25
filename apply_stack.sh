@@ -9,4 +9,10 @@ if [ -f "$REPO_DIR/.bot_tokens.env" ]; then
   set +a
 fi
 
+if [ -f "$REPO_DIR/.ai_runtimes.env" ]; then
+  set -a
+  source "$REPO_DIR/.ai_runtimes.env"
+  set +a
+fi
+
 bash "$REPO_DIR/bootstrap_bot_stack.sh" apply "$REPO_DIR/bot_stack.bootstrap.toml"

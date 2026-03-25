@@ -49,10 +49,30 @@ This script will automatically:
 
 - create `.venv`
 - install Python dependencies
+- install `OpenClaw / Gemini CLI / Codex / Claude Code`
 - initialize local directories
 - create configuration templates
 
-## 5. Run the Configuration Wizard
+## 5. Configure the 4 AI CLIs
+
+```bash
+bash ./configure_ai_runtimes.sh
+```
+
+This step will:
+
+- check whether the 4 AI CLIs are installed
+- create `.ai_runtimes.env`
+- guide you to fill in API keys
+- tell you which CLIs to run if you prefer interactive login
+
+If this is your first time setting everything up, do this before bot stack configuration.
+
+For more details, read:
+
+- [docs/ai-runtimes.md](./docs/ai-runtimes.md)
+
+## 6. Run the Configuration Wizard
 
 ```bash
 bash ./configure.sh
@@ -66,7 +86,7 @@ The wizard will ask for:
 
 If you do not know your Telegram `user_id`, use any temporary bot or an existing bot command such as `/whoami`.
 
-## 6. Fill in Bot Tokens
+## 7. Fill in Bot Tokens
 
 If you did not enter tokens during the wizard, edit the token file manually:
 
@@ -85,7 +105,7 @@ TG_GEMINI_PRIVATE_TOKEN=
 TG_CODEX_PRIVATE_TOKEN=
 ```
 
-## 7. Start the Stack
+## 8. Start the Stack
 
 ```bash
 bash ./apply_stack.sh
@@ -98,7 +118,7 @@ This step will:
 - generate final launchd plist files
 - load and start the services automatically
 
-## 8. Preview Only
+## 9. Preview Only
 
 If you want to preview generated files without starting services:
 
@@ -112,7 +132,7 @@ Generated files will appear in:
 - `generated/bot-stack/launchd/`
 - `generated/bot-stack/STACK_SUMMARY.md`
 
-## 9. Verify the Installation
+## 10. Verify the Installation
 
 Run:
 
@@ -126,7 +146,7 @@ If setup is successful, you will see:
 - bot service status
 - monitor and report status
 
-## 10. Best Order for Beginners
+## 11. Best Order for Beginners
 
 Use this exact sequence:
 
@@ -134,15 +154,16 @@ Use this exact sequence:
 git clone https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack.git
 cd telegram-multi-bot-stack
 bash ./install.sh
+bash ./configure_ai_runtimes.sh
 bash ./configure.sh
 open .bot_tokens.env
 bash ./apply_stack.sh
 bash ./health_check.sh
 ```
 
-## 11. Common Problems
+## 12. Common Problems
 
-### 11.1 Python Not Found
+### 12.1 Python Not Found
 
 Install Python 3 first, then retry:
 
@@ -150,11 +171,11 @@ Install Python 3 first, then retry:
 python3 --version
 ```
 
-### 11.2 Token Missing
+### 12.2 Token Missing
 
 That means `.bot_tokens.env` is incomplete.
 
-### 11.3 Bots Are Not Responding
+### 12.3 Bots Are Not Responding
 
 Check whether launchd services are loaded:
 

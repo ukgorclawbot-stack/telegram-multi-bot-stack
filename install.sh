@@ -15,10 +15,15 @@ echo "==> 安装依赖"
 "$REPO_DIR/.venv/bin/pip" install -U pip >/dev/null
 "$REPO_DIR/.venv/bin/pip" install -r "$REPO_DIR/requirements.txt"
 
+echo "==> 安装 AI 运行时"
+bash "$REPO_DIR/install_ai_runtimes.sh"
+
 echo "==> 准备脚本权限"
 chmod +x "$REPO_DIR/run_role_bot.sh" \
          "$REPO_DIR/run_group_bot.sh" \
          "$REPO_DIR/install.sh" \
+         "$REPO_DIR/install_ai_runtimes.sh" \
+         "$REPO_DIR/configure_ai_runtimes.sh" \
          "$REPO_DIR/configure.sh" \
          "$REPO_DIR/apply_stack.sh" \
          "$REPO_DIR/bootstrap_bot_stack.sh" \
@@ -52,6 +57,7 @@ fi
 
 echo
 echo "安装完成。下一步："
-echo "1) bash ./configure.sh"
-echo "2) 把 bot token 写入 .bot_tokens.env"
-echo "3) bash ./apply_stack.sh"
+echo "1) bash ./configure_ai_runtimes.sh"
+echo "2) bash ./configure.sh"
+echo "3) 把 bot token 写入 .bot_tokens.env"
+echo "4) bash ./apply_stack.sh"

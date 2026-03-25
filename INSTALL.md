@@ -54,10 +54,30 @@ bash ./install.sh
 
 - 创建 `.venv`
 - 安装 Python 依赖
+- 安装 `OpenClaw / Gemini CLI / Codex / Claude Code`
 - 初始化本地目录
 - 准备配置模板
 
-### 5. 一键生成配置
+### 5. 配置 4 个 AI CLI
+
+```bash
+bash ./configure_ai_runtimes.sh
+```
+
+这一步会：
+
+- 检查 4 个 AI CLI 是否已经安装
+- 自动创建 `.ai_runtimes.env`
+- 引导你填写 API key
+- 告诉你如果更喜欢交互式登录，应该执行哪些 CLI
+
+如果你完全是第一次装，建议在配置 bot stack 之前先完成这一步。
+
+更详细的说明见：
+
+- [docs/ai-runtimes.md](./docs/ai-runtimes.md)
+
+### 6. 一键生成配置
 
 ```bash
 bash ./configure.sh
@@ -71,7 +91,7 @@ bash ./configure.sh
 
 如果你不知道自己的 `user_id`，可以先用任意临时 bot 或现有 bot 的 `/whoami` 来查。
 
-### 6. 写入 token
+### 7. 写入 token
 
 如果你在配置向导里没有直接输入 token，就手动编辑：
 
@@ -92,7 +112,7 @@ TG_GEMINI_PRIVATE_TOKEN=
 TG_CODEX_PRIVATE_TOKEN=
 ```
 
-### 7. 启动
+### 8. 启动
 
 ```bash
 bash ./apply_stack.sh
@@ -105,7 +125,7 @@ bash ./apply_stack.sh
 - 生成正式 launchd plist
 - 自动加载并启动服务
 
-### 8. 只想先试运行
+### 9. 只想先试运行
 
 如果你还不想真正启动，只想先看会生成什么：
 
@@ -119,7 +139,7 @@ bash ./bootstrap_bot_stack.sh generate
 - `generated/bot-stack/launchd/`
 - `generated/bot-stack/STACK_SUMMARY.md`
 
-### 9. 安装完成后怎么检查是否成功
+### 10. 安装完成后怎么检查是否成功
 
 直接执行：
 
@@ -133,7 +153,7 @@ bash ./health_check.sh
 - bot 服务状态
 - 监控和晨报状态
 
-### 10. 推荐给零基础用户的完整顺序
+### 11. 推荐给零基础用户的完整顺序
 
 按这个顺序照做最稳：
 
@@ -141,15 +161,16 @@ bash ./health_check.sh
 git clone https://github.com/ukgorclawbot-stack/telegram-multi-bot-stack.git
 cd telegram-multi-bot-stack
 bash ./install.sh
+bash ./configure_ai_runtimes.sh
 bash ./configure.sh
 open .bot_tokens.env
 bash ./apply_stack.sh
 bash ./health_check.sh
 ```
 
-### 11. 常见问题
+### 12. 常见问题
 
-#### 11.1 提示没找到 Python
+#### 12.1 提示没找到 Python
 
 先安装 Python 3，再重试：
 
@@ -157,11 +178,11 @@ bash ./health_check.sh
 python3 --version
 ```
 
-#### 11.2 提示 token 没提供
+#### 12.2 提示 token 没提供
 
 说明 `.bot_tokens.env` 还没写完整。
 
-#### 11.3 机器人没响应
+#### 12.3 机器人没响应
 
 先检查 launchd 是否在线：
 
