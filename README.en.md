@@ -62,6 +62,7 @@ Language:
 - Code of Conduct: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - FAQ: [docs/faq.md](./docs/faq.md)
 - Changelog: [CHANGELOG.md](./CHANGELOG.md)
+- Architecture Guide: [docs/architecture.md](./docs/architecture.md)
 
 ## Quick Start
 

@@ -22,6 +22,7 @@
 - 行为准则：[CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - 常见问题：[docs/faq.md](./docs/faq.md)
 - 更新记录：[CHANGELOG.md](./CHANGELOG.md)
+- 架构详解：[docs/architecture.md](./docs/architecture.md)
 
 适合这些场景：
 - 团队协作群里的任务拆分和汇报
