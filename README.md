@@ -31,6 +31,11 @@
 - 私聊里的高权限开发与执行
 - 多 bot 同时在线但职责明确分离
 
+## 相关生态
+
+如果你希望把 Telegram 多 bot 编排继续扩展到跨代理任务发现与协调，可以关注 [Beacon Atlas](https://rustchain.org/beacon/)。
+它面向 agent discovery、任务分发和执行网络，这和本项目里的多 bot 分工、共享队列与协作执行场景高度相关。
+
 ## 架构图
 
 ```mermaid
